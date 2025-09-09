@@ -34,26 +34,31 @@
       <section class="card weather" aria-live="polite">
         <div class="card-title">Weather</div>
         <div id="weatherStatus">Allow location for weather</div>
+        <div class="row" style="margin-top:10px; gap:8px;">
+            <input id="cityInput" class="input" placeholder="Enter city (e.g., Bhubaneswar)" />
+            <button id="setCity" class="btn small">Set City</button>
+        </div>
+        <div id="geoHint" class="muted" style="margin-top:6px;">Tip: Allow location or enter a city</div>
         <div class="weather-row">
-          <div><span class="label">Temp</span> <span id="temp">--</span></div>
-          <div><span class="label">Wind</span> <span id="wind">--</span></div>
-          <div><span class="label">Sky</span> <span id="sky">--</span></div>
+            <div><span class="label">Temp</span> <span id="temp">--</span></div>
+            <div><span class="label">Wind</span> <span id="wind">--</span></div>
+            <div><span class="label">Sky</span> <span id="sky">--</span></div>
         </div>
         <button id="refreshWeather" class="btn small">Refresh</button>
       </section>
 
       <section class="card quotes">
-        <div class="card-title">Quote</div>
-        <blockquote id="quote">“Loading inspiration…”</blockquote>
-        <div class="muted" id="quoteBy"></div>
+          <div class="card-title">Quote</div>
+          <blockquote id="quote">“Loading inspiration…”</blockquote>
+          <div class="muted" id="quoteBy"></div>
       </section>
 
       <section class="card focus" id="focusCard">
-        <div class="card-title">Focus</div>
-        <input id="focusInput" class="input" placeholder="Type one thing to focus on…" />
-        <div id="focusDisplay" class="focus-display hidden"></div>
-        <div class="row">
-          <button id="focusStart" class="btn small">Start</button>
+          <div class="card-title">Focus</div>
+          <input id="focusInput" class="input" placeholder="Type one thing to focus on…" />
+          <div id="focusDisplay" class="focus-display hidden"></div>
+          <div class="row">
+              <button id="focusStart" class="btn small">Start</button>
           <button id="focusClear" class="btn small secondary">Clear</button>
         </div>
       </section>
