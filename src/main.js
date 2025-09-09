@@ -143,7 +143,7 @@ function defineCommands() {
     { name: 'Refresh Weather', run: () => geoWeather() },
     { name: 'Focus Mode: Start', run: () => startFocus() },
     { name: 'Focus Mode: Clear', run: () => clearFocus() },
-    { name: 'About', run: () => window.open('https://github.com/YOUR_USERNAME/NoxDash', '_blank') },
+    { name: 'About', run: () => window.open('https://github.com/MizxGaming/NoxDash', '_blank') },
   ]
 }
 function renderPalette(list, activeIdx = 0) {
