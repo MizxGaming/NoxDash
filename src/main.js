@@ -105,11 +105,42 @@ function geoWeather() {
       }
     },
     (err) => {
-      $('#weatherStatus').textContent = 'Allow location to show weather'
+      $('#weatherStatus').textContent = 'Location blocked — enter a city'
       console.warn(err)
-    },
-    { enableHighAccuracy: false, timeout: 8000, maximumAge: 600000 }
-  )
+    }
+async function geocodeCity(name) {
+  const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(name)}&count=1&language=en&format=json`
+  const res = await fetch(url)
+  if (!res.ok) throw new Error('Geocoding failed')
+  const data = await res.json()
+  if (!data.results || !data.results.length) throw new Error('City not found')
+  const r = data.results
+  return { lat: r.latitude, lon: r.longitude, label: `${r.name}, ${r.country_code}` }
+}
+
+async function setCityAndFetch() {
+  const name = document.getElementById('cityInput').value.trim()
+  if (!name) return
+  try {
+    $('#weatherStatus').textContent = 'Finding city…'
+    const { lat, lon, label } = await geocodeCity(name)
+    localStorage.setItem('city', name)
+    $('#weatherStatus').textContent = label
+    await fetchWeather(lat, lon)
+  } catch (e) {
+    $('#weatherStatus').textContent = 'City not found'
+    console.error(e)
+  }
+}
+
+function initWeather() {
+  const savedCity = localStorage.getItem('city')
+  if (savedCity) {
+    document.getElementById('cityInput').value = savedCity
+    setCityAndFetch()
+    return
+  }
+  geoWeather()
 }
 
 // ---- Focus card
@@ -141,6 +172,8 @@ function defineCommands() {
     { name: 'Toggle Theme', run: () => toggleTheme() },
     { name: 'Switch Time Format', run: () => { state.time12h = !state.time12h; tick() } },
     { name: 'Refresh Weather', run: () => geoWeather() },
+    { name: 'Set City (use input)', run: () => document.getElementById('cityInput').focus() },
+    { name: 'Clear City', run: () => { localStorage.removeItem('city'); $('#weatherStatus').textContent = 'Allow location for weather'; } },
     { name: 'Focus Mode: Start', run: () => startFocus() },
     { name: 'Focus Mode: Clear', run: () => clearFocus() },
     { name: 'About', run: () => window.open('https://github.com/MizxGaming/NoxDash', '_blank') },
@@ -213,6 +246,7 @@ window.addEventListener('DOMContentLoaded', () => {
   // UI events
   document.getElementById('themeToggle').addEventListener('click', toggleTheme)
   document.getElementById('refreshWeather').addEventListener('click', geoWeather)
+  document.getElementById('setCity').addEventListener('click', setCityAndFetch)
   document.getElementById('focusStart').addEventListener('click', startFocus)
   document.getElementById('focusClear').addEventListener('click', clearFocus)
   document.getElementById('openPalette').addEventListener('click', openPalette)
