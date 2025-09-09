@@ -107,7 +107,7 @@ function geoWeather() {
     (err) => {
       $('#weatherStatus').textContent = 'Location blocked — enter a city'
       console.warn(err)
-    }
+    },
     { enableHighAccuracy: false, timeout: 8000, maximumAge: 600000 }
   )
 }
