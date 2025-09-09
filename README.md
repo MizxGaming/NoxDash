@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-# NoxDash
-=======
 # NoxDash
 
 A beautiful, keyboard-first “Now” dashboard that shows time, date, greeting, local weather (Open‑Meteo), rotating quotes, a focus card, and a Ctrl/Cmd+K command palette. Deployed automatically to GitHub Pages. [Open‑Meteo](https://open-meteo.com) docs cover current_weather fields used here. [5][6]
@@ -32,4 +29,3 @@ This repo uses a single GitHub Actions workflow that builds and publishes to Pag
 
 ## License
 MIT
->>>>>>> 9941276 (Initial Hosting)
