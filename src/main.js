@@ -111,6 +111,7 @@ function geoWeather() {
     { enableHighAccuracy: false, timeout: 8000, maximumAge: 600000 }
   )
 }
+// --- City geocoding + fallback (no top-level await)
 async function geocodeCity(name) {
   const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(name)}&count=1&language=en&format=json`
   const res = await fetch(url)
@@ -122,16 +123,18 @@ async function geocodeCity(name) {
 }
 
 async function setCityAndFetch() {
-  const name = document.getElementById('cityInput').value.trim()
+  const input = document.getElementById('cityInput')
+  if (!input) return
+  const name = input.value.trim()
   if (!name) return
   try {
-    $('#weatherStatus').textContent = 'Finding city…'
+    document.getElementById('weatherStatus').textContent = 'Finding city…'
     const { lat, lon, label } = await geocodeCity(name)
     localStorage.setItem('city', name)
-    $('#weatherStatus').textContent = label
+    document.getElementById('weatherStatus').textContent = label
     await fetchWeather(lat, lon)
   } catch (e) {
-    $('#weatherStatus').textContent = 'City not found'
+    document.getElementById('weatherStatus').textContent = 'City not found'
     console.error(e)
   }
 }
@@ -139,11 +142,12 @@ async function setCityAndFetch() {
 function initWeather() {
   const savedCity = localStorage.getItem('city')
   if (savedCity) {
-    document.getElementById('cityInput').value = savedCity
+    const input = document.getElementById('cityInput')
+    if (input) input.value = savedCity
     setCityAndFetch()
-    return
+  } else {
+    geoWeather()
   }
-  geoWeather()
 }
 
 // ---- Focus card
@@ -245,11 +249,12 @@ window.addEventListener('DOMContentLoaded', () => {
   const savedFocus = localStorage.getItem('focus'); if (savedFocus) { document.getElementById('focusInput').value = savedFocus; startFocus() }
   defineCommands()
   geoWeather()
+  initweather()
 
   // UI events
   document.getElementById('themeToggle').addEventListener('click', toggleTheme)
   document.getElementById('refreshWeather').addEventListener('click', geoWeather)
-  document.getElementById('setCity').addEventListener('click', setCityAndFetch)
+  document.getelementbyid('setcity')?.addeventlistener('click', setcityandfetch)
   document.getElementById('focusStart').addEventListener('click', startFocus)
   document.getElementById('focusClear').addEventListener('click', clearFocus)
   document.getElementById('openPalette').addEventListener('click', openPalette)
