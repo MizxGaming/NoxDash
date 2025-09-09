@@ -108,6 +108,9 @@ function geoWeather() {
       $('#weatherStatus').textContent = 'Location blocked — enter a city'
       console.warn(err)
     }
+    { enableHighAccuracy: false, timeout: 8000, maximumAge: 600000 }
+  )
+}
 async function geocodeCity(name) {
   const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(name)}&count=1&language=en&format=json`
   const res = await fetch(url)
