@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NoxDash · Now Dashboard</title>
+
+  <meta name="description" content="NoxDash: a beautiful, keyboard-first Now dashboard with weather, quotes, focus, and a command palette." />
+  <meta name="theme-color" content="#0f172a" />
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%230f172a'/%3E%3Ctext x='32' y='39' font-family='monospace' font-size='24' text-anchor='middle' fill='white'%3ENX%3C/text%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+  <div id="app" class="page theme-light">
+    <header class="topbar">
+      <div class="brand">NoxDash</div>
+      <div class="actions">
+        <button id="themeToggle" class="btn" aria-label="Toggle theme">Toggle Theme</button>
+        <button id="openPalette" class="btn" aria-label="Open command palette">⌘/Ctrl + K</button>
+      </div>
+    </header>
+
+    <main class="grid">
+      <section class="card time" aria-live="polite">
+        <div id="clock" class="clock">--:--</div>
+        <div id="date" class="date">Loading date…</div>
+        <div id="greeting" class="greeting">Hello</div>
+      </section>
+
+      <section class="card weather" aria-live="polite">
+        <div class="card-title">Weather</div>
+        <div id="weatherStatus">Allow location for weather</div>
+        <div class="weather-row">
+          <div><span class="label">Temp</span> <span id="temp">--</span></div>
+          <div><span class="label">Wind</span> <span id="wind">--</span></div>
+          <div><span class="label">Sky</span> <span id="sky">--</span></div>
+        </div>
+        <button id="refreshWeather" class="btn small">Refresh</button>
+      </section>
+
+      <section class="card quotes">
+        <div class="card-title">Quote</div>
+        <blockquote id="quote">“Loading inspiration…”</blockquote>
+        <div class="muted" id="quoteBy"></div>
+      </section>
+
+      <section class="card focus" id="focusCard">
+        <div class="card-title">Focus</div>
+        <input id="focusInput" class="input" placeholder="Type one thing to focus on…" />
+        <div id="focusDisplay" class="focus-display hidden"></div>
+        <div class="row">
+          <button id="focusStart" class="btn small">Start</button>
+          <button id="focusClear" class="btn small secondary">Clear</button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>Press Ctrl/Cmd + K for commands · Built with Vite</span>
+    </footer>
+  </div>
+
+  <!-- Backdrop -->
+  <div id="paletteBackdrop" class="backdrop hidden" aria-hidden="true"></div>
+
+  <!-- Command Palette -->
+  <div id="palette" class="palette hidden" role="dialog" aria-modal="true" aria-labelledby="paletteLabel">
+    <div class="palette-inner" role="document">
+      <div class="palette-header">
+        <span id="paletteLabel">Command Palette</span>
+        <button id="paletteClose" class="btn small secondary" aria-label="Close">Esc</button>
+      </div>
+      <input id="paletteInput" class="input" type="text" placeholder="Type a command…" aria-autocomplete="list" />
+      <ul id="paletteList" class="palette-list" role="listbox"></ul>
+    </div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
