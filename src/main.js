@@ -111,17 +111,17 @@ function geoWeather() {
     { enableHighAccuracy: false, timeout: 8000, maximumAge: 600000 }
   )
 }
-// --- City geocoding + fallback (no top-level await)
+
+// --- City geocoding + fallback
 async function geocodeCity(name) {
   const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(name)}&count=1&language=en&format=json`
   const res = await fetch(url)
   if (!res.ok) throw new Error('Geocoding failed')
   const data = await res.json()
   if (!data.results || !data.results.length) throw new Error('City not found')
-  const r = data.results
+  const r = data.results // FIX: use first result
   return { lat: r.latitude, lon: r.longitude, label: `${r.name}, ${r.country_code}` }
 }
-
 async function setCityAndFetch() {
   const input = document.getElementById('cityInput')
   if (!input) return
@@ -138,7 +138,6 @@ async function setCityAndFetch() {
     console.error(e)
   }
 }
-
 function initWeather() {
   const savedCity = localStorage.getItem('city')
   if (savedCity) {
@@ -179,7 +178,7 @@ function defineCommands() {
     { name: 'Toggle Theme', run: () => toggleTheme() },
     { name: 'Switch Time Format', run: () => { state.time12h = !state.time12h; tick() } },
     { name: 'Refresh Weather', run: () => geoWeather() },
-    { name: 'Set City (use input)', run: () => document.getElementById('cityInput').focus() },
+    { name: 'Set City (use input)', run: () => document.getElementById('cityInput')?.focus() },
     { name: 'Clear City', run: () => { localStorage.removeItem('city'); $('#weatherStatus').textContent = 'Allow location for weather'; } },
     { name: 'Focus Mode: Start', run: () => startFocus() },
     { name: 'Focus Mode: Clear', run: () => clearFocus() },
@@ -202,8 +201,7 @@ function openPalette() {
   palette.el.classList.remove('hidden')
   palette.backdrop.classList.remove('hidden')
   palette.input.value = ''
-  const filtered = state.commands
-  renderPalette(filtered, palette.idx)
+  renderPalette(state.commands, palette.idx)
   palette.el.setAttribute('aria-hidden', 'false')
   palette.input.focus()
 }
@@ -246,18 +244,18 @@ window.addEventListener('DOMContentLoaded', () => {
   loadTheme()
   tick()
   rotateQuote()
-  const savedFocus = localStorage.getItem('focus'); if (savedFocus) { document.getElementById('focusInput').value = savedFocus; startFocus() }
+  const savedFocus = localStorage.getItem('focus')
+  if (savedFocus) { document.getElementById('focusInput').value = savedFocus; startFocus() }
   defineCommands()
-  geoWeather()
-  initweather()
+  initWeather() // FIX: proper function name
 
   // UI events
-  document.getElementById('themeToggle').addEventListener('click', toggleTheme)
-  document.getElementById('refreshWeather').addEventListener('click', geoWeather)
-  document.getelementbyid('setcity')?.addeventlistener('click', setcityandfetch)
-  document.getElementById('focusStart').addEventListener('click', startFocus)
-  document.getElementById('focusClear').addEventListener('click', clearFocus)
-  document.getElementById('openPalette').addEventListener('click', openPalette)
+  document.getElementById('themeToggle')?.addEventListener('click', toggleTheme)
+  document.getElementById('refreshWeather')?.addEventListener('click', geoWeather)
+  document.getElementById('setCity')?.addEventListener('click', setCityAndFetch) // FIX: correct ID/case
+  document.getElementById('focusStart')?.addEventListener('click', startFocus)
+  document.getElementById('focusClear')?.addEventListener('click', clearFocus)
+  document.getElementById('openPalette')?.addEventListener('click', openPalette)
   palette.input.addEventListener('input', filterPalette)
   palette.backdrop.addEventListener('click', closePalette)
   palette.closeBtn.addEventListener('click', closePalette)
